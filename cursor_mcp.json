@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "acclime-eurotrack": {
+      "command": "python3",
+      "args": [
+        "/Users/anushkadhiman/.gemini/antigravity/scratch/acclime-eurotrack/mcp_server.py"
+      ]
+    }
+  }
+}

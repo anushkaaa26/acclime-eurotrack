@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EuroTrack — Acclime European Account Directory</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-brand">Acclime</span>
+      <div class="topbar-divider"></div>
+      <span class="topbar-section">EuroTrack — European Account Directory &amp; Engagement Intelligence</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-meta">80 accounts · FY2025</span>
+      <button class="btn btn-ghost" onclick="openMCPModal()">MCP Tools</button>
+      <button class="btn btn-ghost" onclick="exportData()">Export CSV</button>
+    </div>
+  </header>
+
+  <main class="page-content">
+
+    <!-- KPI Row -->
+    <div class="stat-row">
+      <div class="stat-block" onclick="filterByMetStatus('All')" id="stat-all">
+        <div class="stat-label">Total Portfolio</div>
+        <div class="stat-value" id="kpiTotal">80</div>
+        <div class="stat-sub">10 countries · 6 sectors · €14.3B coverage</div>
+      </div>
+      <div class="stat-block" onclick="filterByMetStatus('met')" id="stat-met">
+        <div class="stat-label">Met in 2025</div>
+        <div class="stat-value green" id="kpiMet">35</div>
+        <div class="stat-sub">Meeting notes &amp; dates on file</div>
+      </div>
+      <div class="stat-block" onclick="filterByMetStatus('unmet')" id="stat-unmet">
+        <div class="stat-label">Not Yet Met</div>
+        <div class="stat-value" id="kpiUnmet">45</div>
+        <div class="stat-sub">28 high priority · 17 cold</div>
+      </div>
+      <div class="stat-block urgency" onclick="filterByStatus('Met Last Year - Follow-up Due')" id="stat-followup">
+        <div class="stat-label">Follow-up Due</div>
+        <div class="stat-value red" id="kpiFollowup">18</div>
+        <div class="stat-sub">Action required from 2025 meetings</div>
+      </div>
+    </div>
+
+    <!-- Query Bar -->
+    <div class="query-section">
+      <div class="query-label">Ask the database</div>
+
+      <div class="search-row">
+        <input
+          type="text"
+          class="search-input"
+          id="nlQueryInput"
+          placeholder="e.g. &quot;German chemical companies met last year&quot; · &quot;Unmet cleantech above €100M&quot; · &quot;Q4 follow-ups&quot;"
+          onkeydown="if(event.key==='Enter') handleNLQuery()"
+        >
+        <button class="clear-btn" id="clearNLBtn" onclick="clearNLQuery()" style="display:none;">✕ Clear</button>
+        <button class="run-btn" onclick="handleNLQuery()">Run Query →</button>
+      </div>
+
+      <div class="preset-row">
+        <span class="preset-label">Quick filters:</span>
+        <button class="preset-btn" onclick="quickAsk('Which companies did I meet last year?')">Met Last Year (35)</button>
+        <button class="preset-btn" onclick="quickAsk('Show me companies I did not meet last year')">Not Met Yet (45)</button>
+        <button class="preset-btn urgent" onclick="quickAsk('Met Last Year urgent follow-up needed')">⚡ Follow-up Due (18)</button>
+        <button class="preset-btn" onclick="quickAsk('Chemical and Manufacturing companies met last year')">Chemicals &amp; Manufacturing</button>
+        <button class="preset-btn" onclick="quickAsk('Generate Temporary Questions for Top 5 Unmet Targets')">Top 5 Unmet Targets</button>
+      </div>
+
+      <!-- Answer Box -->
+      <div class="answer-box" id="aiSummaryBanner">
+        <div class="answer-header">
+          <span class="answer-label">Query Result</span>
+          <span class="answer-count" id="aiResultBadge"></span>
+        </div>
+        <div class="answer-text" id="aiSummaryText"></div>
+        <button class="sql-toggle-btn" onclick="toggleSQL()">▾ Show SQL</button>
+        <div class="sql-block" id="aiSqlBox"></div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-title">Coverage by Country</div>
+            <div class="chart-hint">Met vs. not met — click a bar to filter</div>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="countryChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <div>
+            <div class="chart-title">Coverage by Sector</div>
+            <div class="chart-hint">Click a bar to filter the directory below</div>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="sectorChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Directory -->
+    <div class="dir-panel">
+
+      <!-- Controls -->
+      <div class="dir-controls">
+        <div class="seg-control">
+          <button class="seg-btn active" id="tabAll" onclick="filterByMetStatus('All')">All (80)</button>
+          <button class="seg-btn" id="tabMet" onclick="filterByMetStatus('met')">Met (35)</button>
+          <button class="seg-btn" id="tabUnmet" onclick="filterByMetStatus('unmet')">Not Met (45)</button>
+        </div>
+
+        <input type="text" class="dir-search" id="tableSearch" placeholder="Search accounts..." oninput="handleTableSearch()">
+
+        <select class="dir-select" id="countryFilter" onchange="handleDropdownFilter()">
+          <option value="All">All Countries</option>
+          <option value="Germany">Germany</option>
+          <option value="UK">United Kingdom</option>
+          <option value="France">France</option>
+          <option value="Netherlands">Netherlands</option>
+          <option value="Switzerland">Switzerland</option>
+          <option value="Sweden">Sweden</option>
+          <option value="Italy">Italy</option>
+          <option value="Spain">Spain</option>
+          <option value="Belgium">Belgium</option>
+          <option value="Denmark">Denmark</option>
+        </select>
+
+        <select class="dir-select" id="sectorFilter" onchange="handleDropdownFilter()">
+          <option value="All">All Sectors</option>
+          <option value="Specialty Chemicals">Specialty Chemicals</option>
+          <option value="Industrial Manufacturing">Industrial Manufacturing</option>
+          <option value="MedTech">MedTech</option>
+          <option value="Cleantech">Cleantech</option>
+          <option value="SaaS">SaaS</option>
+          <option value="Automotive">Automotive</option>
+        </select>
+
+        <select class="dir-select" id="statusFilter" onchange="handleDropdownFilter()">
+          <option value="All">All Stages</option>
+          <option value="Met Last Year - Follow-up Due">Follow-up Due</option>
+          <option value="Met Last Year - Active Pipeline">Active Pipeline</option>
+          <option value="Met Last Year - Paused">Paused</option>
+          <option value="Not Met - High Priority">High Priority</option>
+          <option value="Not Met - Cold">Cold</option>
+        </select>
+
+        <span class="dir-count" id="resultCountText">80 accounts</span>
+
+        <div class="view-toggle">
+          <button class="view-toggle-btn active" id="viewTableBtn" onclick="switchView('table')" title="Table view">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </button>
+          <button class="view-toggle-btn" id="viewGridBtn" onclick="switchView('grid')" title="Card view">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </button>
+        </div>
+
+        <button class="btn btn-ghost" onclick="resetAllFilters()" style="font-size:11px;">Reset all</button>
+      </div>
+
+      <!-- Active filters -->
+      <div class="active-filters" id="activeFilterTags">
+        <span style="font-size:11px; font-weight:600; color:#94a3b8; white-space:nowrap;">Filters active:</span>
+        <div id="tagsList" style="display:flex; gap:5px; flex-wrap:wrap;"></div>
+      </div>
+
+      <!-- Table view -->
+      <div id="tableViewContainer" class="data-table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th onclick="sortTable('id')">ID</th>
+              <th onclick="sortTable('company_name')">Company</th>
+              <th onclick="sortTable('country')">Location</th>
+              <th onclick="sortTable('revenue_eur_m')" class="text-right">Revenue</th>
+              <th onclick="sortTable('meeting_date_last_year')">2025 Meeting</th>
+              <th>Stage</th>
+              <th>Talking Point Preview</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="companyTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Grid view -->
+      <div id="gridViewContainer" class="card-grid hidden"></div>
+
+    </div>
+
+  </main>
+</div>
+
+<!-- ============================================================
+     ACCOUNT DRAWER
+     ============================================================ -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+
+<div class="drawer" id="companyDrawer">
+  <div class="drawer-header">
+    <div class="drawer-header-top">
+      <span class="drawer-id" id="drawerId">EUR-001</span>
+      <button class="btn btn-ghost" onclick="closeDrawer()" style="padding:4px 8px; color:#64748b;">✕</button>
+    </div>
+    <div class="drawer-name" id="drawerCompanyName">Bavaria Katalys Chem AG</div>
+    <div class="drawer-submeta">
+      <span id="drawerCountry">Germany (Munich)</span>
+      <span class="drawer-sep">·</span>
+      <span id="drawerSector">Specialty Chemicals</span>
+      <span class="drawer-sep">·</span>
+      <span class="text-mono" style="font-weight:700;" id="drawerRevenue">€420M</span>
+    </div>
+  </div>
+
+  <div class="drawer-body">
+
+    <!-- Section A: Engagement Record -->
+    <div class="dsec">
+      <div class="dsec-title">Engagement Record</div>
+
+      <div class="contact-card">
+        <div class="contact-avatar" id="drawerContactInitials">SW</div>
+        <div class="contact-info">
+          <div class="contact-name" id="drawerContactName">Dr. Stefan Weber</div>
+          <div class="contact-role" id="drawerContactRole">Chief Executive Officer</div>
+        </div>
+        <a id="drawerContactEmailLink" href="mailto:" class="btn btn-default" style="font-size:11px;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+          <span id="drawerContactEmail">email@domain.com</span>
+        </a>
+      </div>
+
+      <div id="drawerMetLine" class="met-pill is-met">
+        <span class="met-dot green"></span>
+        <span id="drawerMetText">Met on 2025-09-18</span>
+      </div>
+
+      <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:6px;" id="drawerNotesLabel">Meeting notes (2025):</div>
+      <div class="notes-block" id="drawerNotesText">Loading...</div>
+
+      <div class="field-row">
+        <span class="field-label">Pipeline stage:</span>
+        <select class="field-select" id="drawerStatusSelect" onchange="updateDrawerStatus()">
+          <option value="Met Last Year - Follow-up Due">Follow-up Due</option>
+          <option value="Met Last Year - Active Pipeline">Active Pipeline</option>
+          <option value="Met Last Year - Paused">Paused</option>
+          <option value="Not Met - High Priority">Not Met — High Priority</option>
+          <option value="Not Met - Cold">Not Met — Cold</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Section B: Talking Points -->
+    <div class="dsec">
+      <div class="dsec-title">Talking Points</div>
+
+      <div class="context-row">
+        <span class="field-label">Angle:</span>
+        <select class="context-select" id="questionContextSelect" onchange="changeQuestionContext()">
+          <option value="Post-Last-Year Re-engagement">Post-meeting re-engagement</option>
+          <option value="15-Min Check-in Call">15-min check-in</option>
+          <option value="India Market Entry & Tax">India market entry &amp; tax</option>
+          <option value="M&A / JV Exploration">M&amp;A / JV pathways</option>
+        </select>
+      </div>
+
+      <div id="drawerQuestionsContainer">
+        <div style="font-size:12px; color:#94a3b8; padding:8px 0;">Loading questions...</div>
+      </div>
+
+      <div style="margin-top:14px;">
+        <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:6px;">Add a custom question:</div>
+        <div class="add-q-row">
+          <input
+            type="text"
+            class="add-q-input"
+            id="customQuestionInput"
+            placeholder="Type a situational question for this account..."
+            onkeydown="if(event.key==='Enter') addCustomQuestion()"
+          >
+          <button class="btn btn-default" onclick="addCustomQuestion()">Add</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="drawer-footer">
+    <button class="btn btn-default" onclick="copyAllQuestions()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy All Questions
+    </button>
+    <button class="btn btn-primary" onclick="openEmailModal()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Draft Outreach Email
+    </button>
+  </div>
+</div>
+
+<!-- ============================================================
+     EMAIL MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="emailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Outreach Email Draft</div>
+        <div class="modal-sub">Acclime India Advisory · European Inward Investment Practice</div>
+      </div>
+      <button class="btn btn-ghost" onclick="closeEmailModal()" style="color:#64748b;">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>To</label>
+        <input type="text" class="form-input" id="emailToInput" readonly>
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <input type="text" class="form-input" id="emailSubjectInput">
+      </div>
+      <div class="form-group" style="flex:1;">
+        <label>Message</label>
+        <textarea class="form-textarea" id="emailBodyTextarea" rows="12"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <span class="modal-footer-left">Acclime Corporate Services (India) Pvt. Ltd.</span>
+      <div class="modal-footer-right">
+        <button class="btn btn-default" onclick="copyEmailBody()">Copy Text</button>
+        <a id="emailMailtoBtn" href="#" class="btn btn-primary">Open in Mail</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MCP MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="mcpModal">
+  <div class="modal" style="max-width:500px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Model Context Protocol — MCP Server</div>
+        <div class="modal-sub">Connects Claude Desktop, Cursor &amp; other LLM clients to this database</div>
+      </div>
+      <button class="btn btn-ghost" onclick="closeMCPModal()" style="color:#64748b;">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:12px; color:#475569; line-height:1.65;">
+        <code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:11px; font-family:ui-monospace,monospace;">mcp_server.py</code>
+        exposes three callable tools via JSON-RPC 2.0 over stdio:
+      </p>
+      <ul style="font-size:12px; color:#475569; padding-left:18px; list-style:disc; line-height:2.2;">
+        <li><code style="font-family:ui-monospace,monospace; font-size:11px;">ask_companies_met_last_year(country, sector, met_last_year)</code></li>
+        <li><code style="font-family:ui-monospace,monospace; font-size:11px;">get_company_details_and_notes(company_name)</code></li>
+        <li><code style="font-family:ui-monospace,monospace; font-size:11px;">get_potential_temporary_questions(company_name, context)</code></li>
+      </ul>
+      <div>
+        <div style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em;">claude_desktop_config.json</div>
+        <pre class="code-block">{
+  "mcpServers": {
+    "acclime-eurotrack": {
+      "command": "python3",
+      "args": [
+        "/Users/anushkadhiman/.gemini/antigravity/scratch/acclime-eurotrack/mcp_server.py"
+      ]
+    }
+  }
+}</pre>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <span></span>
+      <div class="modal-footer-right">
+        <button class="btn btn-primary" onclick="closeMCPModal()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast-container"></div>
+<script src="/static/js/app.js"></script>
+</body>
+</html>
