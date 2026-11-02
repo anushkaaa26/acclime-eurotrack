@@ -583,6 +583,169 @@ function copyEmailBody() {
   showToast("Email text copied");
 }
 
+// ─── TOUR WALKTHROUGH ─────────────────────────────────────────
+
+const tourSteps = [
+  {
+    step: "STEP 1/6",
+    title: "Executive Portfolio & KPI Cards",
+    subtitle: "At-a-Glance European Coverage",
+    graphic: `
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; text-align:center;">
+        <div style="background:#0f172a; padding:8px; border-radius:6px; border:1px solid #334155;">
+          <div style="font-size:10px; color:#94a3b8; font-weight:700;">TOTAL</div>
+          <div style="font-size:20px; font-weight:800; color:#fff;">80</div>
+        </div>
+        <div style="background:#0f172a; padding:8px; border-radius:6px; border:1px solid #16a34a;">
+          <div style="font-size:10px; color:#4ade80; font-weight:700;">MET 2025</div>
+          <div style="font-size:20px; font-weight:800; color:#4ade80;">35</div>
+        </div>
+        <div style="background:#0f172a; padding:8px; border-radius:6px; border:1px solid #334155;">
+          <div style="font-size:10px; color:#94a3b8; font-weight:700;">UNMET</div>
+          <div style="font-size:20px; font-weight:800; color:#cbd5e1;">45</div>
+        </div>
+        <div style="background:#450a0a; padding:8px; border-radius:6px; border:1px solid #dc2626;">
+          <div style="font-size:10px; color:#f87171; font-weight:700;">FOLLOW-UP</div>
+          <div style="font-size:20px; font-weight:800; color:#f87171;">18</div>
+        </div>
+      </div>
+    `,
+    explanation: "<strong>Where it is:</strong> Top row of the dashboard.<br><strong>What it does:</strong> Displays live counts of Acclime India's European accounts. Exactly 35 were met in 2025, 45 are prospective unmet targets, and 18 have urgent follow-ups due. <em>Tip: Click any card to filter the directory instantly!</em>"
+  },
+  {
+    step: "STEP 2/6",
+    title: "'Just Ask' Natural Language Command Bar",
+    subtitle: "Ask Any Question in Plain English",
+    graphic: `
+      <div style="background:#0f172a; border:1px solid #3b82f6; border-radius:8px; padding:10px;">
+        <div style="font-size:10px; color:#60a5fa; font-weight:700; margin-bottom:4px;">QUERY DATABASE IN NATURAL LANGUAGE</div>
+        <div style="background:#1e293b; padding:8px 12px; border-radius:6px; font-size:12px; color:#e2e8f0; font-family:monospace;">
+          🔍 "German chemical companies met last year"
+        </div>
+        <div style="margin-top:6px; font-size:10px; color:#94a3b8;">Presets: Met Last Year (35) · Not Met Yet (45) · Follow-up Due (18)</div>
+      </div>
+    `,
+    explanation: "<strong>Where it is:</strong> The dark navy bar right beneath the KPI cards.<br><strong>What it does:</strong> Uses an entity-extraction engine to turn conversational English questions into parameterized SQL queries in real time. It displays an AI summary banner and filters the companies automatically."
+  },
+  {
+    step: "STEP 3/6",
+    title: "Geographic & Industry Analytics",
+    subtitle: "Interactive Country & Sector Breakdown",
+    graphic: `
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:11px;">
+        <div style="background:#0f172a; padding:10px; border-radius:6px; border:1px solid #334155;">
+          <div style="font-weight:700; color:#cbd5e1; margin-bottom:4px;">Country Coverage</div>
+          <div style="color:#94a3b8;">Germany (14) · UK (11) · France (10)...</div>
+          <div style="height:6px; background:#2563eb; border-radius:3px; margin-top:6px; width:80%;"></div>
+        </div>
+        <div style="background:#0f172a; padding:10px; border-radius:6px; border:1px solid #334155;">
+          <div style="font-weight:700; color:#cbd5e1; margin-bottom:4px;">Sector Coverage</div>
+          <div style="color:#94a3b8;">Chemicals · Mfg · Cleantech · MedTech...</div>
+          <div style="height:6px; background:#7c3aed; border-radius:3px; margin-top:6px; width:70%;"></div>
+        </div>
+      </div>
+    `,
+    explanation: "<strong>Where it is:</strong> Below the search bar.<br><strong>What it does:</strong> Two stacked bar charts compare companies met in 2025 vs. unmet targets across 10 countries and 6 sectors. <em>Click any bar on either chart to filter the company directory below!</em>"
+  },
+  {
+    step: "STEP 4/6",
+    title: "Corporate Directory & Table Controls",
+    subtitle: "Search, Multi-Filter, and View Switching",
+    graphic: `
+      <div style="background:#0f172a; border:1px solid #334155; border-radius:6px; padding:10px; font-size:11px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:6px; margin-bottom:6px;">
+          <span style="font-weight:700; color:#fff;">All (80) · Met (35) · Not Met (45)</span>
+          <span style="color:#94a3b8;">Table / Grid Toggle</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; color:#cbd5e1;">
+          <span>EUR-001 Bavaria Katalys Chem AG</span>
+          <span style="color:#4ade80; font-weight:700;">✓ Met 2025-09-18</span>
+        </div>
+      </div>
+    `,
+    explanation: "<strong>Where it is:</strong> The main directory card.<br><strong>What it does:</strong> Displays each company with ID, location, annual revenue in €M, 2025 meeting status, pipeline stage badge, and talking point preview. You can toggle between <em>Dense Table View</em> and <em>Card Grid View</em>."
+  },
+  {
+    step: "STEP 5/6",
+    title: "Account Dossier Drawer & Meeting Memory",
+    subtitle: "Deep Account Memory & Discussion Notes",
+    graphic: `
+      <div style="background:#0f172a; border-left:4px solid #2563eb; border-radius:6px; padding:10px; font-size:11px;">
+        <div style="font-weight:800; color:#fff; font-size:12px;">Bavaria Katalys Chem AG · €420M</div>
+        <div style="color:#4ade80; font-weight:700; margin:4px 0;">✓ Met on 2025-09-18 · Dr. Stefan Weber (CEO)</div>
+        <div style="background:#1e293b; padding:6px; border-radius:4px; color:#cbd5e1; font-style:italic;">
+          "Met CEO in Oct 2025. Paused India subsidiary due to EU capex tightening. Interested in Gujarat chemical cluster."
+        </div>
+      </div>
+    `,
+    explanation: "<strong>Where it is:</strong> Click anywhere on a company row or 'Open' button to slide it open from the right.<br><strong>What it does:</strong> Displays executive contacts, verified email, and detailed 2025 meeting memory. You can update the pipeline stage directly, saving changes back to SQLite."
+  },
+  {
+    step: "STEP 6/6",
+    title: "Temporary Questions & Email Drafting",
+    subtitle: "Contextual Outreach Ready in Seconds",
+    graphic: `
+      <div style="background:#0f172a; border:1px solid #334155; border-radius:6px; padding:10px; font-size:11px;">
+        <div style="color:#60a5fa; font-weight:700;">Angle: Post-Meeting Re-engagement</div>
+        <div style="background:#1e293b; padding:6px; border-radius:4px; margin:6px 0; color:#e2e8f0;">
+          1. "When we met in October last year, you paused your India entity setup due to EU capex tightening—how are timelines looking for this quarter?"
+        </div>
+        <div style="display:flex; gap:6px;">
+          <span style="background:#2563eb; color:#fff; padding:3px 8px; border-radius:4px; font-weight:700;">Draft Outreach Email</span>
+          <span style="background:#334155; color:#cbd5e1; padding:3px 8px; border-radius:4px;">Copy Questions</span>
+        </div>
+      </div>
+    `,
+    explanation: "<strong>Where it is:</strong> Section 2 inside the Dossier Drawer.<br><strong>What it does:</strong> Generates 4 tailored talking points. Switch angles (Post-Meeting, 15-Min Check-in, India Entry & Tax, or M&A) to generate new questions. Click <strong>'Draft Outreach Email'</strong> to generate an email with one-click send!"
+  }
+];
+
+let currentTourIndex = 0;
+
+function openTourModal() {
+  currentTourIndex = 0;
+  renderTourStep();
+  document.getElementById("tourModal").classList.add("open");
+}
+
+function closeTourModal() {
+  document.getElementById("tourModal").classList.remove("open");
+}
+
+function renderTourStep() {
+  const s = tourSteps[currentTourIndex];
+  document.getElementById("tourStepBadge").textContent = s.step;
+  document.getElementById("tourTitle").textContent = s.title;
+  document.getElementById("tourSubtitle").textContent = s.subtitle;
+  document.getElementById("tourGraphic").innerHTML = s.graphic;
+  document.getElementById("tourExplanation").innerHTML = s.explanation;
+
+  document.getElementById("tourPrevBtn").style.visibility = currentTourIndex === 0 ? "hidden" : "visible";
+  document.getElementById("tourNextBtn").textContent = currentTourIndex === tourSteps.length - 1 ? "Got it! Close Tour" : "Next →";
+
+  // Dots
+  const dotsContainer = document.getElementById("tourDots");
+  dotsContainer.innerHTML = tourSteps.map((_, i) => `
+    <span style="display:inline-block; width:${i === currentTourIndex ? '18px' : '6px'}; height:6px; border-radius:3px; background:${i === currentTourIndex ? '#2563eb' : '#cbd5e1'}; transition:all 0.2s;"></span>
+  `).join("");
+}
+
+function nextTourStep() {
+  if (currentTourIndex < tourSteps.length - 1) {
+    currentTourIndex++;
+    renderTourStep();
+  } else {
+    closeTourModal();
+  }
+}
+
+function prevTourStep() {
+  if (currentTourIndex > 0) {
+    currentTourIndex--;
+    renderTourStep();
+  }
+}
+
 // ─── MCP MODAL ────────────────────────────────────────────────
 
 function openMCPModal()  { document.getElementById("mcpModal").classList.add("open");    }

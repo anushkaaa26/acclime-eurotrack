@@ -20,6 +20,7 @@
     </div>
     <div class="topbar-right">
       <span class="topbar-meta">80 accounts · FY2025</span>
+      <button class="btn btn-primary" onclick="openTourModal()" style="font-size:11px; background:#2563eb; border-color:#2563eb;">▶ Walkthrough Guide</button>
       <button class="btn btn-ghost" onclick="openMCPModal()">MCP Tools</button>
       <button class="btn btn-ghost" onclick="exportData()">Export CSV</button>
     </div>
@@ -385,6 +386,41 @@
       <span></span>
       <div class="modal-footer-right">
         <button class="btn btn-primary" onclick="closeMCPModal()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     TOUR WALKTHROUGH MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="tourModal">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-header" style="background:#0f172a; color:#fff; border-radius:14px 14px 0 0;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="background:#2563eb; color:#fff; font-size:10px; font-weight:800; padding:2px 8px; rounded:4px; border-radius:4px;" id="tourStepBadge">STEP 1/6</span>
+        <div>
+          <div class="modal-title" style="color:#fff;" id="tourTitle">Executive Overview &amp; Portfolio KPIs</div>
+          <div class="modal-sub" style="color:#94a3b8;" id="tourSubtitle">Acclime EuroTrack AI Interactive Guided Tour</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost" onclick="closeTourModal()" style="color:#94a3b8;">✕</button>
+    </div>
+    <div class="modal-body" style="padding:20px;">
+      <div id="tourGraphic" style="background:#1e293b; border-radius:10px; padding:16px; margin-bottom:14px; color:#f1f5f9; min-height:120px;">
+        <!-- Injected by JS -->
+      </div>
+      <div style="font-size:13px; color:#334155; line-height:1.7;" id="tourExplanation">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+    <div class="modal-footer" style="background:#f8fafc; border-radius:0 0 14px 14px;">
+      <div style="display:flex; gap:4px;" id="tourDots">
+        <!-- Injected by JS -->
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-default" onclick="prevTourStep()" id="tourPrevBtn">Previous</button>
+        <button class="btn btn-primary" onclick="nextTourStep()" id="tourNextBtn">Next →</button>
       </div>
     </div>
   </div>
