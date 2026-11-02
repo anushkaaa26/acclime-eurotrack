@@ -860,6 +860,13 @@ def serve_index():
         return FileResponse(index_file)
     return HTMLResponse("<h1>Acclime EuroTrack AI Server Running</h1><p>Static index.html not found yet.</p>")
 
+@app.get("/tour")
+def serve_tour():
+    tour_file = os.path.join(STATIC_DIR, "tour.html")
+    if os.path.isfile(tour_file):
+        return FileResponse(tour_file)
+    return HTMLResponse("<h1>Acclime EuroTrack Video Tour Not Found</h1>")
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8080))

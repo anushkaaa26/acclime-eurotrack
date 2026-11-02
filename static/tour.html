@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acclime EuroTrack AI — Cinematic Product Walkthrough</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @keyframes equalizer {
+      0%, 100% { height: 4px; }
+      50% { height: 20px; }
+    }
+    .eq-bar {
+      width: 3px;
+      background: #38bdf8;
+      border-radius: 2px;
+      animation: equalizer 0.85s ease-in-out infinite;
+    }
+    .eq-bar:nth-child(2) { animation-delay: 0.15s; }
+    .eq-bar:nth-child(3) { animation-delay: 0.35s; }
+    .eq-bar:nth-child(4) { animation-delay: 0.2s; }
+    .eq-bar:nth-child(5) { animation-delay: 0.4s; }
+
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.6); }
+      70% { transform: scale(1); box-shadow: 0 0 0 12px rgba(37, 99, 235, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+    }
+    .spotlight-pulse {
+      animation: pulse-ring 2.5s infinite;
+    }
+
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    .type-cursor { animation: blink 0.8s infinite; }
+
+    .glow-bg {
+      background: radial-gradient(circle at 50% 30%, rgba(37,99,235,0.18) 0%, rgba(15,23,42,0) 70%);
+    }
+  </style>
+</head>
+<body class="bg-transparent text-[var(--foreground)] antialiased p-2 sm:p-4 font-sans select-none">
+  <div class="bg-slate-950 text-slate-100 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden max-w-4xl mx-auto flex flex-col">
+    
+    <!-- Top macOS Window Header -->
+    <div class="bg-slate-900/90 backdrop-blur px-4 py-3 flex items-center justify-between border-b border-slate-800/80">
+      
+      <!-- Traffic Light Window Buttons -->
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-[#ff5f56] inline-block shadow-sm"></span>
+        <span class="w-3 h-3 rounded-full bg-[#ffbd2e] inline-block shadow-sm"></span>
+        <span class="w-3 h-3 rounded-full bg-[#27c93f] inline-block shadow-sm"></span>
+        <span class="ml-2 text-xs font-semibold text-slate-400 hidden sm:inline">Acclime EuroTrack AI · Product Tour</span>
+      </div>
+
+      <!-- Simulated Browser URL Bar -->
+      <div class="flex items-center gap-1.5 bg-slate-950/80 border border-slate-700/60 rounded-lg px-3 py-1 text-[11px] font-mono text-slate-300 w-64 sm:w-80 justify-center shadow-inner">
+        <svg class="w-3 h-3 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span>eurotrack.acclime.com</span>
+        <span class="text-blue-400 ml-1 font-semibold" id="urlPath">/overview</span>
+      </div>
+
+      <!-- High-Def Audio Engine Badge -->
+      <div class="flex items-center gap-2">
+        <div id="audioWaveform" class="flex items-center gap-1 h-5 px-2 bg-slate-800/90 rounded border border-slate-700">
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="text-[9px] text-sky-400 font-mono ml-1 font-bold uppercase">Studio Voice</span>
+        </div>
+        <button id="voiceToggleBtn" onclick="toggleVoice()" class="bg-blue-600 hover:bg-blue-500 text-white text-[11px] px-2.5 py-1 rounded font-semibold transition flex items-center gap-1 shadow-sm">
+          <span id="voiceIcon">🔊</span>
+          <span id="voiceStatusText" class="hidden sm:inline">Voice: ON</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Main Cinematic Stage Viewport -->
+    <div class="relative bg-slate-950 aspect-[16/9] overflow-hidden flex flex-col justify-between p-4 sm:p-6 glow-bg border-b border-slate-800/80">
+      
+      <!-- Stage Chapter & Breadcrumb Header -->
+      <div class="relative z-10 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span id="chapterBadge" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-mono text-xs font-bold px-2.5 py-0.5 rounded shadow">
+            SCENE 1 / 8
+          </span>
+          <span id="chapterTitle" class="text-xs sm:text-sm font-bold text-slate-200 tracking-wide">
+            Portfolio KPI Metrics
+          </span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[11px] bg-slate-900 border border-slate-700/80 text-slate-300 px-2.5 py-0.5 rounded-full font-mono flex items-center gap-1.5 shadow-sm">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Live Interactive Demo
+          </span>
+        </div>
+      </div>
+
+      <!-- Animated Stage Content -->
+      <div id="stageContent" class="relative z-10 my-auto py-1 transition-all duration-300">
+        <!-- Injected dynamically by JS -->
+      </div>
+
+      <!-- Presenter Closed Caption / Subtitle Bar -->
+      <div class="relative z-10 bg-slate-900/95 backdrop-blur-md border border-slate-800/90 rounded-xl p-3 sm:p-3.5 shadow-2xl flex items-start gap-3">
+        <button onclick="replayCurrentScene()" title="Replay voice narration" class="w-9 h-9 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 flex items-center justify-center text-white text-sm font-bold shrink-0 shadow-md transition transform active:scale-95">
+          🗣️
+        </button>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between mb-0.5">
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-bold text-sky-400 uppercase tracking-wider">Voice Narration</span>
+              <span class="text-[10px] text-emerald-400 bg-emerald-950/70 border border-emerald-700/60 px-1.5 py-0.2 rounded font-mono font-semibold">Jenny Neural HD</span>
+            </div>
+            <button onclick="replayCurrentScene()" class="text-[10px] text-sky-400 hover:text-sky-300 font-semibold underline">
+              Repeat ↺
+            </button>
+          </div>
+          <p id="narrationText" class="text-xs text-slate-200 font-medium leading-relaxed">
+            Welcome to Acclime EuroTrack AI. At the top of your dashboard are four KPI metric cards tracking all eighty European companies. Thirty-five were met last year in 2025, forty-five are prospective targets, and eighteen require urgent follow-up. Clicking any card instantly filters the entire directory.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Timeline Progress Bar -->
+    <div class="w-full bg-slate-900 h-1.5 cursor-pointer relative group" id="progressBarContainer" onclick="handleTimelineClick(event)">
+      <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-full w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Video Controls & Chapter Navigation Bar -->
+    <div class="p-3 sm:p-4 bg-slate-900 flex flex-wrap items-center justify-between gap-2 sm:gap-4">
+      
+      <!-- Play/Pause & Step Buttons -->
+      <div class="flex items-center gap-2">
+        <button id="playPauseBtn" onclick="togglePlay()" class="bg-blue-600 hover:bg-blue-500 text-white p-2 rounded-lg flex items-center justify-center shadow transition active:scale-95">
+          <svg id="playIcon" class="w-4 h-4 fill-current hidden" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <svg id="pauseIcon" class="w-4 h-4 fill-current" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        </button>
+
+        <button onclick="prevScene()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1 border border-slate-700">
+          ⏮ Prev
+        </button>
+        <button onclick="nextScene()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1 border border-slate-700">
+          Next ⏭
+        </button>
+      </div>
+
+      <!-- Quick Chapter Pills -->
+      <div class="flex items-center gap-1 overflow-x-auto py-1 max-w-full">
+        <button onclick="jumpTo(0)" class="chapter-btn px-2.5 py-1 text-xs rounded-md border font-medium transition shrink-0" data-index="0">1. KPIs</button>
+        <button onclick="jumpTo(1)" class="chapter-btn px-2.5 py-1 text-xs rounded-md border font-medium transition shrink-0" data-index="1">2. "Just Ask"</button>
+        <button onclick="jumpTo(2)" class="chapter-btn px-2.5 py-1 text-xs rounded-md border font-medium transition shrink-0" data-index="2">3. Charts</button>
+        <button onclick="jumpTo(3)" class="chapter-btn px-2.5 py-1 text-xs rounded-md border font-medium transition shrink-0" data-index="3">4. Directory</button>
+        <button onclick="jumpTo(4)" class="chapter-btn px-2.5 py-1 text-xs rounded-md border font-medium transition shrink-0" data-index="4">5. Memory</button>
+        <button onclick="jumpTo(5)" class="chapter-btn px-2.5 py-1 text-xs rounded-md border font-medium transition shrink-0" data-index="5">6. Questions</button>
+        <button onclick="jumpTo(6)" class="chapter-btn px-2.5 py-1 text-xs rounded-md border font-medium transition shrink-0" data-index="6">7. Email</button>
+        <button onclick="jumpTo(7)" class="chapter-btn px-2.5 py-1 text-xs rounded-md border font-medium transition shrink-0" data-index="7">8. MCP</button>
+      </div>
+
+      <!-- Resolution & Free Indicator -->
+      <div class="text-[11px] text-slate-400 font-mono hidden md:flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span>Studio Audio Sync</span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const scenes = [
+      {
+        title: "Executive KPI Cards — Portfolio Overview",
+        badge: "SCENE 1 / 8",
+        url: "/overview",
+        glow: "bg-blue-600/20",
+        audioSrc: "/static/audio/scene1.mp3",
+        narration: "Welcome to Acclime EuroTrack AI. At the top of your dashboard are four KPI metric cards tracking all eighty European companies. Thirty-five were met last year in 2025, forty-five are prospective targets, and eighteen require urgent follow-up. Clicking any card instantly filters the entire directory.",
+        render: () => `
+          <div class="max-w-2xl mx-auto space-y-3">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div class="bg-slate-900 border border-slate-700 rounded-xl p-3 shadow-lg">
+                <div class="text-[9px] font-bold uppercase text-slate-400 tracking-wider">Total Portfolio</div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-white mt-1">80</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">10 Nations · €14.3B</div>
+              </div>
+              <div class="bg-slate-900 border border-emerald-500/50 rounded-xl p-3 shadow-lg bg-emerald-950/20">
+                <div class="text-[9px] font-bold uppercase text-emerald-400 tracking-wider">Met in 2025</div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400 mt-1">35</div>
+                <div class="text-[10px] text-emerald-300/80 mt-0.5">Meeting Notes on File</div>
+              </div>
+              <div class="bg-slate-900 border border-slate-700 rounded-xl p-3 shadow-lg">
+                <div class="text-[9px] font-bold uppercase text-slate-400 tracking-wider">Not Met Yet</div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-slate-200 mt-1">45</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">28 High Priority</div>
+              </div>
+              <div class="bg-slate-900 border-2 border-red-500 rounded-xl p-3 shadow-xl bg-red-950/30 spotlight-pulse">
+                <div class="text-[9px] font-bold uppercase text-red-400 tracking-wider flex items-center justify-between">
+                  <span>Follow-Up Due</span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping"></span>
+                </div>
+                <div class="text-2xl sm:text-3xl font-extrabold text-red-400 mt-1">18</div>
+                <div class="text-[10px] text-red-300 mt-0.5 font-semibold">⚡ Action Required</div>
+              </div>
+            </div>
+            <div class="bg-slate-900/80 border border-slate-800 rounded-lg p-2 flex items-center justify-between text-[11px] text-slate-400">
+              <span>💡 <em>Clicking any metric card filters the entire corporate directory below</em></span>
+              <span class="text-blue-400 font-semibold font-mono">1-Click Fast Filter</span>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "Just Ask — Natural Language Query Bar",
+        badge: "SCENE 2 / 8",
+        url: "/ask-ai",
+        glow: "bg-indigo-600/25",
+        audioSrc: "/static/audio/scene2.mp3",
+        narration: "The Just Ask command bar translates plain English questions into structured SQL in real time. You can type queries like German chemical companies met last year, or click any of the five quick filter presets.",
+        render: () => `
+          <div class="bg-slate-900 border border-slate-700 rounded-xl p-3.5 max-w-xl mx-auto shadow-2xl space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-blue-400 font-mono">AI Command Bar</span>
+              <span class="text-[10px] text-slate-400">English to SQL Translation</span>
+            </div>
+            
+            <div class="flex items-center gap-2 bg-slate-950 border-2 border-blue-500 rounded-lg p-2.5 shadow-lg ring-2 ring-blue-500/20">
+              <span class="text-blue-400">🔍</span>
+              <span class="text-xs sm:text-sm font-medium text-slate-100 flex-1">
+                "German chemical companies met last year"<span class="type-cursor text-blue-400 font-bold">|</span>
+              </span>
+              <button class="bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold px-3 py-1 rounded shadow">
+                Run Query →
+              </button>
+            </div>
+
+            <div class="bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs font-mono text-emerald-400 text-[11px] flex items-center justify-between">
+              <span>SELECT * FROM companies WHERE country LIKE 'Germany%' AND met_last_year = 1...</span>
+              <span class="bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded text-[10px] font-bold">5 accounts found</span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-1.5 text-[10px]">
+              <span class="text-slate-400 font-semibold">1-Click Presets:</span>
+              <span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full border border-slate-700 font-medium">Met Last Year (35)</span>
+              <span class="bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full border border-slate-700 font-medium">Not Met Yet (45)</span>
+              <span class="bg-red-950 text-red-300 px-2 py-0.5 rounded-full border border-red-700/60 font-bold">⚡ Follow-Up Due (18)</span>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "Coverage Analytics — Interactive Charts",
+        badge: "SCENE 3 / 8",
+        url: "/analytics",
+        glow: "bg-purple-600/25",
+        audioSrc: "/static/audio/scene3.mp3",
+        narration: "Two interactive bar charts break down coverage by Country and Sector, comparing Met companies in blue against unmet targets. Clicking any bar on either chart filters the corporate table below.",
+        render: () => `
+          <div class="grid grid-cols-2 gap-3 max-w-xl mx-auto">
+            <div class="bg-slate-900 border border-slate-700 rounded-xl p-3 shadow-lg">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-bold text-white">Coverage by Country</span>
+                <span class="text-[9px] text-blue-400 font-mono">10 Nations</span>
+              </div>
+              <div class="space-y-2 mt-2">
+                <div>
+                  <div class="flex justify-between text-[10px] text-slate-300 mb-0.5">
+                    <span class="font-semibold text-white">Germany (14)</span>
+                    <span class="text-slate-400">8 Met · 6 Unmet</span>
+                  </div>
+                  <div class="h-2.5 w-full bg-slate-800 rounded-full overflow-hidden flex border border-slate-700">
+                    <div class="bg-blue-600 h-full w-[57%]"></div>
+                    <div class="bg-slate-600 h-full w-[43%]"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-[10px] text-slate-300 mb-0.5">
+                    <span class="font-semibold text-white">United Kingdom (11)</span>
+                    <span class="text-slate-400">5 Met · 6 Unmet</span>
+                  </div>
+                  <div class="h-2.5 w-full bg-slate-800 rounded-full overflow-hidden flex border border-slate-700">
+                    <div class="bg-blue-600 h-full w-[45%]"></div>
+                    <div class="bg-slate-600 h-full w-[55%]"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-[10px] text-slate-300 mb-0.5">
+                    <span class="font-semibold text-white">France (10)</span>
+                    <span class="text-slate-400">4 Met · 6 Unmet</span>
+                  </div>
+                  <div class="h-2.5 w-full bg-slate-800 rounded-full overflow-hidden flex border border-slate-700">
+                    <div class="bg-blue-600 h-full w-[40%]"></div>
+                    <div class="bg-slate-600 h-full w-[60%]"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-slate-900 border border-slate-700 rounded-xl p-3 shadow-lg">
+              <div class="flex justify-between items-center mb-1">
+                <span class="text-xs font-bold text-white">Coverage by Sector</span>
+                <span class="text-[9px] text-purple-400 font-mono">6 Verticals</span>
+              </div>
+              <div class="space-y-2 mt-2">
+                <div>
+                  <div class="flex justify-between text-[10px] text-slate-300 mb-0.5">
+                    <span class="font-semibold text-white">Specialty Chemicals</span>
+                    <span class="text-slate-400">18 accounts</span>
+                  </div>
+                  <div class="h-2.5 w-full bg-slate-800 rounded-full overflow-hidden flex border border-slate-700">
+                    <div class="bg-purple-600 h-full w-[61%]"></div>
+                    <div class="bg-slate-600 h-full w-[39%]"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-[10px] text-slate-300 mb-0.5">
+                    <span class="font-semibold text-white">Industrial Mfg</span>
+                    <span class="text-slate-400">16 accounts</span>
+                  </div>
+                  <div class="h-2.5 w-full bg-slate-800 rounded-full overflow-hidden flex border border-slate-700">
+                    <div class="bg-purple-600 h-full w-[50%]"></div>
+                    <div class="bg-slate-600 h-full w-[50%]"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-[10px] text-slate-300 mb-0.5">
+                    <span class="font-semibold text-white">Cleantech & Solar</span>
+                    <span class="text-slate-400">13 accounts</span>
+                  </div>
+                  <div class="h-2.5 w-full bg-slate-800 rounded-full overflow-hidden flex border border-slate-700">
+                    <div class="bg-purple-600 h-full w-[38%]"></div>
+                    <div class="bg-slate-600 h-full w-[62%]"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "Enterprise Corporate Directory — Table & Grid",
+        badge: "SCENE 4 / 8",
+        url: "/directory",
+        glow: "bg-emerald-600/20",
+        audioSrc: "/static/audio/scene4.mp3",
+        narration: "The directory displays all eighty companies with live search, stage tags, and column sorting. You can toggle between the dense Table View and visual Card Grid View. Every row opens a detailed dossier.",
+        render: () => `
+          <div class="bg-slate-900 border border-slate-700 rounded-xl overflow-hidden max-w-2xl mx-auto shadow-2xl">
+            <div class="bg-slate-800/80 px-3 py-2 border-b border-slate-700 flex justify-between items-center text-xs">
+              <span class="font-bold text-white">Corporate Directory (80 Accounts)</span>
+              <div class="flex items-center gap-1.5">
+                <span class="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">Table View</span>
+                <span class="bg-slate-700 text-slate-300 text-[10px] px-2 py-0.5 rounded">Card Grid</span>
+              </div>
+            </div>
+            <div class="divide-y divide-slate-800 text-xs">
+              <div class="p-2.5 flex items-center justify-between hover:bg-slate-800/50 bg-slate-800/20 cursor-pointer">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-mono text-[10px] text-blue-400 font-bold">EUR-001</span>
+                    <span class="font-bold text-white">Bavaria Katalys Chem AG</span>
+                    <span class="text-[10px] text-slate-400">Germany · Specialty Chemicals</span>
+                  </div>
+                  <p class="text-[11px] text-slate-400 mt-0.5 italic">"When we met in October last year, you paused your India entity setup..."</p>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <span class="bg-emerald-950 text-emerald-400 text-[10px] px-2 py-0.5 rounded-full font-bold border border-emerald-700">✓ 2025-09-18</span>
+                  <span class="bg-red-950 text-red-400 text-[10px] px-2 py-0.5 rounded-full font-bold border border-red-700">Follow-up Due</span>
+                  <span class="text-blue-400 font-bold text-xs ml-1">Open →</span>
+                </div>
+              </div>
+              
+              <div class="p-2.5 flex items-center justify-between hover:bg-slate-800/50 cursor-pointer">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-mono text-[10px] text-slate-500 font-bold">EUR-002</span>
+                    <span class="font-bold text-slate-200">Rheinland Precision Tools</span>
+                    <span class="text-[10px] text-slate-400">Germany · Industrial Mfg</span>
+                  </div>
+                  <p class="text-[11px] text-slate-500 mt-0.5 italic">"Are rising EU regulatory costs pushing you to evaluate a China+1 base?..."</p>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <span class="bg-slate-800 text-slate-400 text-[10px] px-2 py-0.5 rounded-full">Not met</span>
+                  <span class="bg-amber-950 text-amber-400 text-[10px] px-2 py-0.5 rounded-full font-bold border border-amber-700">High Priority</span>
+                  <span class="text-slate-500 font-bold text-xs ml-1">Open →</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "Account Dossier Drawer — Engagement Memory",
+        badge: "SCENE 5 / 8",
+        url: "/dossier/EUR-001",
+        glow: "bg-blue-600/30",
+        audioSrc: "/static/audio/scene5.mp3",
+        narration: "Clicking any company slides out the Account Dossier. Section 1 holds the full Engagement Memory: meeting date, executive contacts, and exact discussion notes from 2025. You can update their stage directly, which saves immediately to SQLite.",
+        render: () => `
+          <div class="bg-slate-900 border-2 border-blue-500/80 rounded-xl p-3.5 max-w-md mx-auto shadow-2xl relative">
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <span class="text-[9px] font-mono text-blue-400 font-bold tracking-wider">EUR-001 · ACCOUNT DOSSIER</span>
+                <h3 class="text-sm sm:text-base font-extrabold text-white">Bavaria Katalys Chem AG</h3>
+                <span class="text-xs text-slate-400">Munich, Germany · Turnover: €420M</span>
+              </div>
+              <span class="bg-emerald-950 text-emerald-300 text-[10px] px-2 py-0.5 rounded-full font-bold border border-emerald-600">✓ Met in 2025</span>
+            </div>
+
+            <!-- Memory Section -->
+            <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-2.5 text-xs space-y-1.5 my-2">
+              <div class="flex justify-between items-center text-[10px] font-bold text-slate-400">
+                <span>SECTION 1: ENGAGEMENT RECORD</span>
+                <span class="text-emerald-400">Meeting Date: 2025-09-18</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="w-6 h-6 rounded bg-blue-600 flex items-center justify-center text-[10px] font-bold text-white">SW</span>
+                <div>
+                  <div class="text-white font-bold text-xs">Dr. Stefan Weber</div>
+                  <div class="text-[10px] text-slate-400">Chief Executive Officer · s.weber@bavaria-katalys.de</div>
+                </div>
+              </div>
+              <p class="text-slate-300 text-[11px] bg-slate-900 p-2 rounded border border-slate-800 italic">
+                "Met CEO in Oct 2025. They wanted to set up an Indian subsidiary in Q2 2026 but paused due to European energy costs. Interested in Gujarat chemical cluster."
+              </p>
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] pt-1">
+              <span class="text-slate-400">Pipeline Stage:</span>
+              <span class="bg-red-950 text-red-300 px-2 py-0.5 rounded font-bold border border-red-700">Follow-up Due (Saved to SQLite)</span>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "Potential Temporary Questions — 4 Angles",
+        badge: "SCENE 6 / 8",
+        url: "/questions/EUR-001",
+        glow: "bg-cyan-600/25",
+        audioSrc: "/static/audio/scene6.mp3",
+        narration: "Section 2 provides four time-sensitive Potential Temporary Questions. Switch angles dynamically between Post-Meeting Re-engagement, 15-Minute Check-in, India Market Entry and Tax, or Joint Venture Pathways.",
+        render: () => `
+          <div class="bg-slate-900 border border-slate-700 rounded-xl p-3.5 max-w-lg mx-auto shadow-2xl space-y-2.5">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-white">SECTION 2: TEMPORARY TALKING POINTS</span>
+              <span class="bg-blue-600/20 text-blue-400 text-[10px] px-2 py-0.5 rounded border border-blue-500 font-mono font-bold">4 Strategic Angles</span>
+            </div>
+
+            <!-- Angle Switcher -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-1 text-[10px] font-semibold text-center">
+              <span class="bg-blue-600 text-white p-1 rounded shadow">Post-Meeting</span>
+              <span class="bg-slate-800 text-slate-300 p-1 rounded border border-slate-700">15-Min Check-in</span>
+              <span class="bg-slate-800 text-slate-300 p-1 rounded border border-slate-700">India Tax & Entry</span>
+              <span class="bg-slate-800 text-slate-300 p-1 rounded border border-slate-700">M&A / JV Pathways</span>
+            </div>
+
+            <!-- Dynamic Question Cards -->
+            <div class="space-y-1.5 text-xs">
+              <div class="bg-slate-950 p-2 rounded-lg border border-slate-800">
+                <span class="text-[9px] font-bold text-blue-400 uppercase font-mono block">Point 1 · Capex Timeline</span>
+                <p class="text-slate-200 text-[11px] font-medium leading-relaxed">
+                  "When we met in October last year, you paused your India entity setup due to EU capex tightening—how are timelines looking for this quarter?"
+                </p>
+              </div>
+              <div class="bg-slate-950 p-2 rounded-lg border border-slate-800">
+                <span class="text-[9px] font-bold text-blue-400 uppercase font-mono block">Point 2 · Cluster Strategy</span>
+                <p class="text-slate-200 text-[11px] font-medium leading-relaxed">
+                  "Have you evaluated the Dahej PCPIR cluster in Gujarat since our discussion last year regarding chemical feedstock access?"
+                </p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "1-Click Outreach Email Composer",
+        badge: "SCENE 7 / 8",
+        url: "/compose-email",
+        glow: "bg-blue-600/25",
+        audioSrc: "/static/audio/scene7.mp3",
+        narration: "Clicking Draft Outreach Email generates a professional consulting advisory message pre-populated with recipient details, personalized subject line, and embedded situational questions. Ready to copy or send immediately in Mail.",
+        render: () => `
+          <div class="bg-slate-900 border border-slate-700 rounded-xl p-3.5 max-w-md mx-auto shadow-2xl space-y-2">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-1.5 text-xs">
+              <span class="font-bold text-white">Outreach Email Draft</span>
+              <span class="text-blue-400 font-mono text-[10px]">Acclime Advisory</span>
+            </div>
+            
+            <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-[11px] space-y-1 font-mono">
+              <div class="text-slate-400"><span class="text-slate-500">To:</span> Dr. Stefan Weber &lt;s.weber@bavaria-katalys.de&gt;</div>
+              <div class="text-slate-300 font-bold"><span class="text-slate-500">Subject:</span> Follow-up: Bavaria Katalys India Advisory &amp; 2026 Timelines</div>
+              <div class="text-slate-400 pt-1 text-[10px] leading-relaxed font-sans border-t border-slate-900 mt-1">
+                "Dear Stefan, Following up on our meeting in October regarding Bavaria Katalys's India setup plans..."
+              </div>
+            </div>
+
+            <div class="flex gap-2 pt-1">
+              <button class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-1.5 rounded font-bold flex-1 text-center border border-slate-700">
+                Copy Email Text
+              </button>
+              <button class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1.5 rounded font-bold flex-1 text-center shadow">
+                Open in Mail Client ↗
+              </button>
+            </div>
+          </div>
+        `
+      },
+      {
+        title: "Model Context Protocol (MCP) Server",
+        badge: "SCENE 8 / 8",
+        url: "/mcp-tools",
+        glow: "bg-emerald-600/30",
+        audioSrc: "/static/audio/scene8.mp3",
+        narration: "The built-in MCP server exposes three tools via JSON-RPC over standard I O, allowing Claude Desktop and Cursor to query the eighty European companies directly from the AI chat window. The app is live and deployed on Render.",
+        render: () => `
+          <div class="bg-slate-900 border border-slate-700 rounded-xl p-3.5 max-w-lg mx-auto shadow-2xl space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-emerald-400">Claude Desktop &amp; Cursor MCP Tools</span>
+              <span class="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-slate-300 font-mono">mcp_server.py</span>
+            </div>
+
+            <div class="space-y-1.5 text-xs font-mono">
+              <div class="bg-slate-950 p-2 rounded border border-slate-800 text-emerald-300 text-[11px] flex justify-between">
+                <span>🛠 ask_companies_met_last_year</span>
+                <span class="text-slate-500">country, sector, met</span>
+              </div>
+              <div class="bg-slate-950 p-2 rounded border border-slate-800 text-emerald-300 text-[11px] flex justify-between">
+                <span>🛠 get_company_details_and_notes</span>
+                <span class="text-slate-500">company_name</span>
+              </div>
+              <div class="bg-slate-950 p-2 rounded border border-slate-800 text-emerald-300 text-[11px] flex justify-between">
+                <span>🛠 get_potential_temporary_questions</span>
+                <span class="text-slate-500">company_name, context</span>
+              </div>
+            </div>
+
+            <div class="bg-slate-950/60 p-2 rounded border border-slate-800/80 text-[10px] text-slate-400 flex items-center justify-between">
+              <span>Ready in claude_desktop_config.json</span>
+              <span class="text-emerald-400 font-bold font-mono">Deployed Live on Render ✓</span>
+            </div>
+          </div>
+        `
+      }
+    ];
+
+    let currentScene = 0;
+    let isPlaying = true;
+    let isVoiceOn = true;
+    let currentAudio = null;
+    let advanceTimer = null;
+
+    function playAudioForCurrentScene() {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+
+      if (!isVoiceOn) {
+        document.getElementById("audioWaveform").classList.add("hidden");
+        return;
+      }
+
+      const s = scenes[currentScene];
+      currentAudio = new Audio(s.audioSrc);
+      
+      currentAudio.onplay = () => {
+        document.getElementById("audioWaveform").classList.remove("hidden");
+      };
+
+      currentAudio.onended = () => {
+        document.getElementById("audioWaveform").classList.add("hidden");
+        if (isPlaying) {
+          clearTimeout(advanceTimer);
+          advanceTimer = setTimeout(() => {
+            nextScene();
+          }, 1400);
+        }
+      };
+
+      currentAudio.onerror = () => {
+        document.getElementById("audioWaveform").classList.add("hidden");
+        if (window.speechSynthesis && isVoiceOn) {
+          const utter = new SpeechSynthesisUtterance(s.narration);
+          utter.onstart = () => document.getElementById("audioWaveform").classList.remove("hidden");
+          utter.onend = () => {
+            document.getElementById("audioWaveform").classList.add("hidden");
+            if (isPlaying) setTimeout(nextScene, 1400);
+          };
+          window.speechSynthesis.speak(utter);
+        }
+      };
+
+      currentAudio.play().catch(e => {
+        console.log("Autoplay waiting for click gesture:", e);
+      });
+    }
+
+    function renderScene(idx) {
+      currentScene = idx;
+      clearTimeout(advanceTimer);
+      const s = scenes[idx];
+
+      document.getElementById("chapterBadge").textContent = s.badge;
+      document.getElementById("chapterTitle").textContent = s.title;
+      document.getElementById("narrationText").textContent = s.narration;
+      document.getElementById("urlPath").textContent = s.url;
+
+      const stage = document.getElementById("stageContent");
+      stage.style.opacity = "0";
+      stage.style.transform = "translateY(6px)";
+      
+      setTimeout(() => {
+        stage.innerHTML = s.render();
+        stage.style.opacity = "1";
+        stage.style.transform = "translateY(0)";
+      }, 100);
+
+      // Progress bar
+      const pct = ((idx + 1) / scenes.length) * 100;
+      document.getElementById("progressBar").style.width = pct + "%";
+
+      // Chapter buttons
+      document.querySelectorAll(".chapter-btn").forEach((btn, bIdx) => {
+        if (bIdx === idx) {
+          btn.className = "chapter-btn px-2.5 py-1 text-xs rounded-md font-bold bg-blue-600 text-white border-blue-500 shadow shrink-0";
+        } else {
+          btn.className = "chapter-btn px-2.5 py-1 text-xs rounded-md border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-800 font-medium transition shrink-0";
+        }
+      });
+
+      // Play audio
+      playAudioForCurrentScene();
+    }
+
+    function nextScene() {
+      const next = (currentScene + 1) % scenes.length;
+      renderScene(next);
+    }
+
+    function prevScene() {
+      const prev = (currentScene - 1 + scenes.length) % scenes.length;
+      renderScene(prev);
+    }
+
+    function jumpTo(idx) {
+      renderScene(idx);
+    }
+
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      document.getElementById("playIcon").classList.toggle("hidden", isPlaying);
+      document.getElementById("pauseIcon").classList.toggle("hidden", !isPlaying);
+      if (isPlaying) {
+        playAudioForCurrentScene();
+      } else {
+        if (currentAudio) currentAudio.pause();
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        clearTimeout(advanceTimer);
+        document.getElementById("audioWaveform").classList.add("hidden");
+      }
+    }
+
+    function toggleVoice() {
+      isVoiceOn = !isVoiceOn;
+      const btn = document.getElementById("voiceToggleBtn");
+      const icon = document.getElementById("voiceIcon");
+      const text = document.getElementById("voiceStatusText");
+      if (isVoiceOn) {
+        btn.className = "bg-blue-600 hover:bg-blue-500 text-white text-[11px] px-2.5 py-1 rounded font-semibold transition flex items-center gap-1 shadow-sm";
+        icon.textContent = "🔊";
+        text.textContent = "Voice: ON";
+        playAudioForCurrentScene();
+      } else {
+        btn.className = "bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] px-2.5 py-1 rounded font-semibold transition border border-slate-700 flex items-center gap-1";
+        icon.textContent = "🔇";
+        text.textContent = "Voice: MUTED";
+        if (currentAudio) currentAudio.pause();
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        document.getElementById("audioWaveform").classList.add("hidden");
+      }
+    }
+
+    function replayCurrentScene() {
+      isVoiceOn = true;
+      document.getElementById("voiceStatusText").textContent = "Voice: ON";
+      document.getElementById("voiceIcon").textContent = "🔊";
+      playAudioForCurrentScene();
+    }
+
+    function handleTimelineClick(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const pct = clickX / rect.width;
+      const targetIdx = Math.min(scenes.length - 1, Math.max(0, Math.floor(pct * scenes.length)));
+      jumpTo(targetIdx);
+    }
+
+    // Keyboard navigation
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "Space") { e.preventDefault(); togglePlay(); }
+      if (e.code === "ArrowRight") nextScene();
+      if (e.code === "ArrowLeft") prevScene();
+    });
+
+    // Start with scene 0
+    renderScene(0);
+  </script>
+</body>
+</html>
