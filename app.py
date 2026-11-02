@@ -9,10 +9,13 @@ FastAPI Server providing:
 - Static Asset Serving
 """
 
+import hashlib
 import json
 import os
 import re
 import sqlite3
+import urllib.error
+import urllib.request
 from typing import Any, Dict, List, Optional
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -771,6 +774,62 @@ def get_chart_breakdowns():
             for r in status_rows
         ]
     }
+
+# ----------------- REALISTIC TTS ENGINE -----------------
+
+class TTSRequest(BaseModel):
+    text: str
+    voice: Optional[str] = "alloy"  # alloy, echo, fable, onyx, nova, shimmer
+    api_key: Optional[str] = None
+
+@app.post("/api/tts")
+def generate_tts(req: TTSRequest):
+    """
+    Generates human-quality MP3 voice narration via OpenAI TTS API.
+    Caches generated MP3 files locally to avoid redundant charges.
+    """
+    api_key = req.api_key or os.environ.get("OPENAI_API_KEY")
+    if not api_key:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "error": "OPENAI_API_KEY_REQUIRED",
+                "message": "OpenAI API Key required (starts with 'sk-'). You can set OPENAI_API_KEY in environment or pass in request."
+            }
+        )
+    
+    # Cache audio locally by hash of text + voice
+    text_hash = hashlib.md5(f"{req.voice}:{req.text}".encode()).hexdigest()
+    cache_dir = os.path.join(BASE_DIR, "audio_cache")
+    os.makedirs(cache_dir, exist_ok=True)
+    cache_path = os.path.join(cache_dir, f"{text_hash}.mp3")
+    
+    if os.path.isfile(cache_path):
+        return FileResponse(cache_path, media_type="audio/mpeg")
+    
+    url = "https://api.openai.com/v1/audio/speech"
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+    payload = json.dumps({
+        "model": "tts-1",
+        "input": req.text,
+        "voice": req.voice or "alloy"
+    }).encode("utf-8")
+    
+    try:
+        request = urllib.request.Request(url, data=payload, headers=headers, method="POST")
+        with urllib.request.urlopen(request, timeout=30) as response:
+            audio_bytes = response.read()
+            with open(cache_path, "wb") as f:
+                f.write(audio_bytes)
+        return FileResponse(cache_path, media_type="audio/mpeg")
+    except urllib.error.HTTPError as e:
+        err_body = e.read().decode("utf-8", errors="ignore")
+        return JSONResponse(status_code=e.code, content={"error": "OPENAI_API_ERROR", "details": err_body})
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 # ----------------- STATIC ASSET SERVING -----------------
 
