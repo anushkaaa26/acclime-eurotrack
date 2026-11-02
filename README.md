@@ -1,174 +1,216 @@
-# Acclime EuroTrack AI — 80-Company European Engagement & Question Intelligence Dashboard
+<div align="center">
 
-[![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.139-green.svg)](https://fastapi.tiangolo.com)
-[![SQLite](https://img.shields.io/badge/Database-SQLite%203-lightgrey.svg)](https://sqlite.org)
-[![MCP](https://img.shields.io/badge/Protocol-Model%20Context%20Protocol%20(MCP)-purple.svg)](https://modelcontextprotocol.io)
-[![License](https://img.shields.io/badge/License-Proprietary%20Acclime-navy.svg)](#)
+# 🌍 Acclime EuroTrack AI
+### 80-Company European Engagement & Question Intelligence Platform
 
-A production-ready European Engagement & Question Intelligence Web Application and Model Context Protocol (MCP) Database built for **Acclime India's Strategy & International Business Team**.
+[![Render Deployment](https://img.shields.io/badge/Render-Live%20Deployed-00E599?logo=render&logoColor=white&style=for-the-badge)](https://acclime-eurotrack.onrender.com)
+[![Video Tour](https://img.shields.io/badge/Video%20Tour-Interactive%20Walkthrough-FF0000?logo=youtube&logoColor=white&style=for-the-badge)](https://acclime-eurotrack.onrender.com/tour)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github&logoColor=white&style=for-the-badge)](https://github.com/anushkaaa26/acclime-eurotrack)
 
-EuroTrack AI manages a curated database of **exactly 80 European companies**, tracks meeting memories from last year (2025) versus unmet targets, provides an AI-powered **"Just Ask" Natural Language Command Bar** with instant SQL translation, visualizes geographic and sectoral breakdowns, and dynamically generates **potential temporary questions** (timely, situational follow-up and discovery questions) customized by strategic context.
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![SQLite3](https://img.shields.io/badge/Database-SQLite%203-003B57?logo=sqlite&logoColor=white)](https://sqlite.org)
+[![MCP](https://img.shields.io/badge/Protocol-Model%20Context%20Protocol%20(MCP)-7C3AED)](https://modelcontextprotocol.io)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://docker.com)
+[![Voice](https://img.shields.io/badge/AI%20Voice-Jenny%20Neural%20HD-0284C7)](https://acclime-eurotrack.onrender.com/tour)
 
----
+<p align="center">
+  <b>A bespoke, production-ready Client Intelligence & Strategic Advisory Web Platform engineered for Acclime India’s Strategy & International Business Practice.</b>
+</p>
 
-## 🏛️ Executive Architecture & System Design
-
-```
-acclime-eurotrack/
-├── euro_companies.db             # Primary SQLite database (80 European companies & indexes)
-├── euro_companies.json           # JSON database export & fallback
-├── generate_dataset.py           # Reproducible dataset generator with strict validation checks
-├── app.py                        # FastAPI REST API, Natural Language Query Engine, & Static Server
-├── mcp_server.py                 # Model Context Protocol server (FastMCP + JSON-RPC 2.0 stdio)
-├── test_mcp.py                   # MCP protocol testing and verification suite
-├── claude_desktop_config.json    # Ready-to-use configuration for Claude Desktop
-├── cursor_mcp.json               # Ready-to-use configuration for Cursor IDE
-├── static/
-│   ├── index.html                # Responsive dashboard with Tailwind CSS, Chart.js & Lucide icons
-│   ├── css/styles.css            # Acclime design system, glassy cards, pulsing badges
-│   └── js/app.js                 # Frontend application logic, filters, drawer, email composer
-└── README.md                     # Comprehensive documentation & deployment guide
-```
+[🌐 Live Cloud App](https://acclime-eurotrack.onrender.com) • [🎬 Watch Video Tour](https://acclime-eurotrack.onrender.com/tour) • [📦 GitHub Repository](https://github.com/anushkaaa26/acclime-eurotrack) • [🛠️ MCP Setup](#-model-context-protocol-mcp-server)
 
 ---
 
-## 📊 1. The 80 European Companies Database (`met_last_year` Core Logic)
+</div>
 
-EuroTrack AI contains **exactly 80 realistic European corporate records** spanning 10 countries and 6 strategic industry verticals:
+## 🎬 Interactive Video Tour & Product Walkthrough
 
-| Metric | Target Count | Verified Count | Key Strategic Insight |
-| :--- | :--- | :--- | :--- |
-| **Total European Database** | `80` | **80** | Balanced across 10 European economies |
-| **Companies I Met Last Year (2025)** | `35` | **35** | Exact 2025 meeting dates & detailed discussion notes |
-| **Companies Not Met Yet** | `45` | **45** | China+1, energy crisis, and India FDI rationales |
-| **Pending Follow-ups from Last Year** | `18` | **18** | Actionable follow-up milestones due |
-| **Active Pipeline from Last Year** | `—` | **11** | Entity setup or JV negotiations in flight |
-| **Paused from Last Year** | `—` | **6** | Capex or regulatory pauses needing re-activation |
-| **Not Met — High Priority Targets** | `—` | **28** | Immediate first-touch outreach candidates |
-| **Not Met — Cold Targets** | `—` | **17** | Secondary tier monitoring |
+EuroTrack AI features a **cinematic, keynote-style interactive video walkthrough** with **Microsoft Jenny Neural HD** studio voice narration.
 
-### Geographic Coverage (10 European Nations)
-- 🇩🇪 **Germany**: 14 companies (Munich, Stuttgart, Düsseldorf, Frankfurt, Hamburg, Berlin, etc.)
-- 🇬🇧 **United Kingdom**: 12 companies (Oxford, Birmingham, Cambridge, Bristol, London, Manchester, etc.)
-- 🇫🇷 **France**: 10 companies (Lyon, Rouen, Lille, Toulouse, Paris, Strasbourg, Bordeaux, etc.)
-- 🇳🇱 **Netherlands**: 8 companies (Rotterdam, Eindhoven, Delft, Amsterdam, Utrecht, etc.)
-- 🇨🇭 **Switzerland**: 7 companies (Basel, Zurich, La Chaux-de-Fonds, Geneva, Lucerne, etc.)
-- 🇸🇪 **Sweden**: 7 companies (Stockholm, Gothenburg, Malmö, Västerås, Uppsala, etc.)
-- 🇮🇹 **Italy**: 8 companies (Milan, Bologna, Turin, Padua, Florence, Parma, Bergamo, etc.)
-- 🇪🇸 **Spain**: 6 companies (Barcelona, Bilbao, Valencia, Madrid, Zaragoza)
-- 🇧🇪 **Belgium**: 4 companies (Antwerp, Ghent, Leuven, Brussels)
-- 🇩🇰 **Denmark**: 4 companies (Copenhagen, Aarhus, Odense, Aalborg)
+> 📺 **Watch the Full Interactive Walkthrough Live:**  
+> 👉 **[https://acclime-eurotrack.onrender.com/tour](https://acclime-eurotrack.onrender.com/tour)**  
+> *(Zero configuration needed — pre-rendered neural voice audio plays with 0ms latency)*
 
-### Sector Verticals (6 High-Value Sectors)
-1. **Specialty Chemicals** (15 companies) — Agrochemicals, catalysts, fluoropolymers, fragrance synthesis, bio-resins.
-2. **Industrial Manufacturing** (17 companies) — Precision robotics, CNC milling, semiconductor handling, hydraulics.
-3. **MedTech** (13 companies) — Surgical robotics, point-of-care diagnostics, continuous glucose monitors, dialysis.
-4. **Cleantech** (13 companies) — Hydrogen electrolyzers, solar tracking, flow batteries, agrivoltaics, carbon capture.
-5. **SaaS** (11 companies) — Supply chain tracking, AML fraud detection, digital twin simulation, grid management.
-6. **Automotive** (11 companies) — EV powertrains, battery thermal management, chassis systems, sensor fusion.
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│  🔴 🟡 🟢  https://eurotrack.acclime.com/tour                           [Studio Voice] │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                        │
+│   [ SCENE 1 / 8 ]  Executive Portfolio Overview                                        │
+│   ┌───────────────────┐ ┌───────────────────┐ ┌───────────────────┐ ┌────────────────┐ │
+│   │ TOTAL PORTFOLIO   │ │ MET IN 2025       │ │ NOT MET YET       │ │ FOLLOW-UP DUE  │ │
+│   │ 80 Companies      │ │ 35 Accounts       │ │ 45 Targets        │ │ 18 Urgent ⚡    │ │
+│   │ 10 Nations · €14B │ │ Notes on file     │ │ High Priority     │ │ Action Req     │ │
+│   └───────────────────┘ └───────────────────┘ └───────────────────┘ └────────────────┘ │
+│                                                                                        │
+│   🎙️ Voiceover: "Welcome to Acclime EuroTrack AI. At the top of your dashboard are     │
+│   four KPI metric cards tracking all eighty European companies..."                     │
+│   [ ılılıll AI SPEAKING ]                                  [ ⏮ Prev ] [ ▶ Play ] [ Next ⏭ ] │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Video Tour Chapters:
+
+| # | Chapter Title | Timeline | Voice Narration Topic |
+|---|---|---|---|
+| **01** | **Executive Portfolio Overview** | `00:00 - 00:20` | High-level portfolio metrics: 80 companies, 35 met in 2025, 45 unmet, 18 urgent follow-ups. |
+| **02** | **"Just Ask" AI Command Bar** | `00:20 - 00:40` | English-to-SQL translation in real-time, live SQL query inspection, and 5 quick filter presets. |
+| **03** | **Coverage Distribution Analytics** | `00:40 - 01:00` | Stacked country (10 nations) & sector (6 verticals) charts with click-to-filter drilldown. |
+| **04** | **Corporate Directory & Views** | `01:00 - 01:20` | Dense Table View vs. Visual Card Grid View, column sorting, search, and status badges. |
+| **05** | **Account Dossier & Meeting Memory**| `01:20 - 01:40` | Solves engagement amnesia: verbatim 2025 meeting notes, executive contacts, and live stage updating. |
+| **06** | **Potential Temporary Questions** | `01:40 - 02:00` | 4 situation-specific questions dynamically generated across 4 strategic advisory angles. |
+| **07** | **1-Click Outreach Email Composer** | `02:00 - 02:20` | Auto-drafts personalized advisory emails pre-populated with questions and `mailto:` launch. |
+| **08** | **Model Context Protocol (MCP)** | `02:20 - 02:40` | Connects Claude Desktop and Cursor directly to the SQLite database via JSON-RPC stdio. |
 
 ---
 
-## ⚡ 2. Core Application Features
+## 🏛️ Executive Summary & Strategic Rationale
 
-### Feature 1: "Just Ask" Natural Language Bar
-Located at the top of the dashboard, analysts can query the database using free-form natural language:
-- *"Which companies did I meet last year?"*
-- *"Which German chemical companies did I meet last year?"*
-- *"Show me the companies I didn't meet last year with revenue over €100M"*
-- *"What are the potential temporary questions for the companies I met in Q4 last year?"*
-- *"Chemical & Manufacturing Companies Met Last Year"*
-- *"Generate Temporary Questions for Top 5 Unmet Targets"*
+Acclime India’s Strategy & International Business Practice advises European multinationals on **Inward Foreign Direct Investment (FDI)**, wholly-owned Indian subsidiary setup, regulatory compliance, transfer pricing, and "China+1" supply chain diversification into Indian industrial corridors (Gujarat chemicals, Tamil Nadu electronics, Pune automotive).
 
-**Under the Hood:**
-1. The backend NLP engine parses entities (countries, sectors, revenue limits, quarters, and status).
-2. Converts criteria into safe, parameterized SQLite queries.
-3. Live-updates the entire dashboard (KPIs, visual tables, and card views).
-4. Generates a crisp **Acclime Executive Summary Brief** highlighting revenue impact, follow-up flags, and strategic themes.
-5. Displays the exact SQL executed in a collapsible developer accordion.
+Senior advisory teams meet dozens of European executive delegations annually. **EuroTrack AI solves three critical institutional problems:**
 
-### Feature 2: Visual Analytics Dashboard ("Which Company / Companies I Met")
-- **4 Top KPI Cards:** Direct 1-click drill-downs into Total (80), Met Last Year (35), Not Met (45), and Pending Follow-ups (18).
-- **Interactive Country Breakdown Bar Chart:** Stacked comparison of Met vs. Not Met across all 10 countries; clicking any country bar instantly filters the company list.
-- **Interactive Sector Breakdown Bar Chart:** Visualizes distribution across all 6 industry verticals; clicking any sector bar filters the directory.
-- **Table vs. Card Grid Switcher:** Full spreadsheet view with sortable columns or visual cards with key contact and question previews.
-
-### Feature 3: "Potential Temporary Questions" & Company Drawer
-Clicking on any company slides open a comprehensive intelligence drawer:
-- **Section A — Meeting Memory:**
-  - Met status badge (`✓ Met Last Year` with date, or `○ Unmet Target`).
-  - Key contact avatar, name, executive title, and direct email link.
-  - Full discussion notes from 2025 or strategic FDI rationale.
-  - Live status dropdown (updates SQLite database in real time).
-- **Section B — Potential Temporary Questions (Core Deliverable):**
-  - Displays 4 time-sensitive, situational questions tailored to the company's status.
-  - **Dynamic Context Selector:** Switch between 4 strategic contexts:
-    1. `Post-Last-Year Re-engagement`
-    2. `15-Min Check-in Call`
-    3. `India Market Entry & Tax`
-    4. `M&A / JV Exploration`
-  - Re-generates tailored questions on the fly when the context changes.
-  - Add custom situational questions directly into the database.
-  - 1-click copy individual questions or all 4 questions at once.
-- **Outreach Email Composer:**
-  - One click opens a pre-drafted client email customized with the company's meeting notes and selected temporary questions.
-  - Features Acclime India signature block, 1-click "Copy to Clipboard", and "Open in Mail App (`mailto:`)".
-
-### Feature 4: Model Context Protocol (`mcp_server.py`)
-EuroTrack AI exposes a compliant **Model Context Protocol (MCP)** server supporting both `FastMCP` and clean standard JSON-RPC 2.0 over `stdio`. AI agents in Claude Desktop, Cursor, and other IDEs can execute 3 specialized tools:
-1. `ask_companies_met_last_year(country, sector, met_last_year)`
-2. `get_company_details_and_notes(company_name)`
-3. `get_potential_temporary_questions(company_name, context)`
+1. **The Engagement Amnesia Problem**: Post-meeting momentum is historically lost. If an analyst met a CEO in October 2025 who paused India entry due to European energy costs, following up in 2026 requires instant recall of that exact strategic context.
+2. **The Cold Target Discovery Problem**: Unmet targets receive generic outreach. EuroTrack generates tailored, timely questions referencing rising EU capex constraints and Indian cluster readiness.
+3. **The Natural Language Querying Need**: Business leaders want to ask plain English questions like *"Which German chemical companies did I meet last year?"* or *"Top 5 unmet cleantech companies above €100M"* without writing SQL.
 
 ---
 
-## 🚀 Quickstart Guide
+## 📊 The 80-Company European Database
 
-### 1. Run the Web Application
-```bash
-cd /Users/anushkadhiman/.gemini/antigravity/scratch/acclime-eurotrack
-python3 -m uvicorn app:app --host 127.0.0.1 --port 8080
+The database is built on a validated relational SQLite engine ([`euro_companies.db`](euro_companies.db)) paired with a JSON fallback ([`euro_companies.json`](euro_companies.json)):
+
 ```
-Open **[http://127.0.0.1:8080](http://127.0.0.1:8080)** in your browser.
-
-### 2. Run the MCP Server Self-Test
-```bash
-python3 mcp_server.py --test
-```
-
-### 3. Verify MCP Protocol Handling (JSON-RPC stdio)
-```bash
-python3 test_mcp.py
+Total Portfolio: 80 Companies (€14.3 Billion Combined Turnover)
+├── Met in 2025 (35 Companies)
+│   ├── Follow-up Due (18)  ──> Action required from 2025 meetings
+│   ├── Active Pipeline (11) ──> Subsidiary setup / JV in progress
+│   └── Paused (6)           ──> Paused on energy/capex, ready for re-activation
+└── Not Met Yet (45 Companies)
+    ├── High Priority (28)   ──> Immediate first-touch outreach candidates
+    └── Cold (17)            ──> Secondary tier monitoring
 ```
 
-### 4. Connect to Claude Desktop
-Add the following configuration to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+### 10 European Nations Covered:
+- 🇩🇪 **Germany** (14): Munich, Stuttgart, Düsseldorf, Frankfurt, Hamburg, Berlin
+- 🇬🇧 **United Kingdom** (11): Oxford, Cambridge, Birmingham, Bristol, London, Manchester
+- 🇫🇷 **France** (10): Lyon, Toulouse, Lille, Paris, Rouen, Strasbourg
+- 🇳🇱 **Netherlands** (8): Rotterdam, Eindhoven, Delft, Amsterdam, Utrecht
+- 🇮🇹 **Italy** (8): Milan, Bologna, Turin, Padua, Florence, Parma
+- 🇨🇭 **Switzerland** (7): Basel, Zurich, Geneva, Lucerne, La Chaux-de-Fonds
+- 🇸🇪 **Sweden** (7): Stockholm, Gothenburg, Malmö, Västerås, Uppsala
+- 🇪🇸 **Spain** (6): Barcelona, Bilbao, Valencia, Madrid, Zaragoza
+- 🇧🇪 **Belgium** (4): Antwerp, Ghent, Leuven, Brussels
+- 🇩🇰 **Denmark** (4): Copenhagen, Aarhus, Odense, Aalborg
+
+### 6 High-Growth Sectors:
+1. **Specialty Chemicals** (18 companies) — Agrochemicals, industrial catalysts, fluoropolymers, fragrance synthesis.
+2. **Industrial Manufacturing** (16 companies) — Precision robotics, CNC tooling, semiconductor handling equipment.
+3. **Cleantech & Solar** (13 companies) — Hydrogen electrolyzers, solar tracking, flow batteries, carbon capture.
+4. **MedTech** (12 companies) — Surgical robotics, point-of-care diagnostics, continuous monitoring devices.
+5. **SaaS & Enterprise Tech** (11 companies) — Supply chain visibility, AML fraud detection, digital twin simulation.
+6. **Automotive & EV** (10 companies) — EV powertrains, battery thermal management, chassis electronics.
+
+---
+
+## ⚡ Core Application Architecture
+
+```
+                               ┌──────────────────────────────────────────────┐
+                               │                 Client Layer                 │
+                               │  (Browser Web UI / Claude Desktop / Cursor)  │
+                               └──────────────────────┬───────────────────────┘
+                                                      │
+                              ┌───────────────────────┴───────────────────────┐
+                              │                                               │
+                              ▼                                               ▼
+                  ┌───────────────────────┐                       ┌───────────────────────┐
+                  │  FastAPI HTTP Server  │                       │   FastMCP / StdIO     │
+                  │       (app.py)        │                       │    (mcp_server.py)    │
+                  └───────────┬───────────┘                       └───────────┬───────────┘
+                              │                                               │
+                              ├───────────────────────┬───────────────────────┤
+                              ▼                       ▼                       ▼
+                  ┌───────────────────────┐ ┌───────────────────┐ ┌───────────────────────┐
+                  │ NL Query Regex Engine │ │ Static Files CDN  │ │ SQLite Storage Engine │
+                  │  (Entities -> SQL)    │ │  (HTML/CSS/JS)    │ │  (euro_companies.db)  │
+                  └───────────────────────┘ └───────────────────┘ └───────────────────────┘
+```
+
+---
+
+## 🚀 Key Feature Breakdown
+
+### 1. "Just Ask" Natural Language Command Bar
+- Type questions like:
+  - *"Which companies did I meet last year?"*
+  - *"German chemical companies met last year"*
+  - *"Unmet cleantech companies above €100M"*
+  - *"Follow-up due Q4 accounts"*
+- An entity-extraction parser tokenizes country, sector, revenue constraints, and meeting status.
+- Converts to safe, parameterized SQLite queries, updates the entire UI live, and renders an **AI Executive Summary Banner** with executed SQL code.
+
+### 2. Dual-View Corporate Directory
+- **Dense Table View:** Instant column sorting by ID, Company Name, Country, Turnover (€M), Meeting Date, and Stage.
+- **Card Grid View:** Card-based UI showing key contacts, turnover, and discussion previews.
+- **Multi-Filter Bar:** Real-time search by company name, executive contact, or notes, combined with dropdown filters for Country, Sector, and Stage.
+
+### 3. Account Dossier Drawer & Engagement Memory
+- **Section 1: Engagement Memory:** Displays exact meeting dates, executive contact name, role, verified email, and detailed verbatim notes from 2025.
+- **Live Stage Updating:** Change the pipeline stage directly in the drawer dropdown — updates the SQLite database in real time.
+
+### 4. Potential Temporary Questions Engine
+- Automatically generates 4 time-sensitive, situational questions.
+- **Dynamic Context Selector:**
+  1. *Post-Meeting Re-engagement* (bridges gap from 2025 meeting notes)
+  2. *15-Min Check-in Call* (low-friction check-in touchpoint)
+  3. *India Market Entry & Tax* (FDI structuring, transfer pricing, entity setup)
+  4. *M&A / JV Pathways* (local joint ventures, acquisition targets)
+- Custom question input field to append account-specific notes directly to the database.
+
+### 5. 1-Click Outreach Email Composer
+- Pre-populates recipient name, email, advisory subject line, and formatted email body containing the situational questions.
+- Includes 1-click **"Copy Text"** and **"Open in Mail"** (`mailto:`) for instant client outreach.
+
+---
+
+## 🛠️ Model Context Protocol (MCP) Server
+
+EuroTrack AI ships with a compliant **Model Context Protocol (MCP)** server ([`mcp_server.py`](mcp_server.py)) running over standard I/O (JSON-RPC 2.0).
+
+### Available Tools:
+
+| Tool | Parameters | Description |
+|---|---|---|
+| `ask_companies_met_last_year` | `country`, `sector`, `met_last_year` | Query the 80 European companies by meeting status, country, or sector. |
+| `get_company_details_and_notes` | `company_name` | Retrieve executive contacts, financial turnover, and 2025 meeting notes. |
+| `get_potential_temporary_questions`| `company_name`, `context` | Generate 4 situational outreach questions tailored to a specific strategic context. |
+
+### Connect to Claude Desktop:
+Add to your `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
     "acclime-eurotrack": {
       "command": "python3",
       "args": [
-        "/Users/anushkadhiman/.gemini/antigravity/scratch/acclime-eurotrack/mcp_server.py"
-      ],
-      "env": {
-        "PYTHONUNBUFFERED": "1"
-      }
+        "/path/to/acclime-eurotrack/mcp_server.py"
+      ]
     }
   }
 }
 ```
 
-### 5. Connect to Cursor IDE
-Add the snippet in `cursor_mcp.json` to your Cursor Settings > MCP Servers:
+### Connect to Cursor IDE:
+Add to Cursor Settings > **MCP Servers**:
 ```json
 {
   "mcpServers": {
     "acclime-eurotrack": {
       "command": "python3",
       "args": [
-        "/Users/anushkadhiman/.gemini/antigravity/scratch/acclime-eurotrack/mcp_server.py"
+        "/path/to/acclime-eurotrack/mcp_server.py"
       ]
     }
   }
@@ -177,7 +219,57 @@ Add the snippet in `cursor_mcp.json` to your Cursor Settings > MCP Servers:
 
 ---
 
-## 🧪 Verification & Test Results
+## 🏃 Local Quickstart & Development
+
+### 1. Clone & Setup
+```bash
+git clone https://github.com/anushkaaa26/acclime-eurotrack.git
+cd acclime-eurotrack
+pip install -r requirements.txt
+```
+
+### 2. Verify Database Integrity
+```bash
+python generate_dataset.py
+```
+*(Confirms exactly 80 companies, 35 met, 45 unmet, 18 follow-up due)*
+
+### 3. Run Web Server
+```bash
+uvicorn app:app --host 127.0.0.1 --port 8080 --reload
+```
+Open **[http://127.0.0.1:8080](http://127.0.0.1:8080)** in your browser.  
+Open **[http://127.0.0.1:8080/tour](http://127.0.0.1:8080/tour)** for the cinematic video walkthrough.
+
+### 4. Run with Docker
+```bash
+docker compose up -d --build
+```
+
+---
+
+## 🌐 Cloud Deployment (Render Blueprint)
+
+This repository includes a [`render.yaml`](render.yaml) blueprint:
+1. Connect your GitHub fork to [Render Dashboard](https://dashboard.render.com).
+2. Select **New Web Service** → Choose `acclime-eurotrack`.
+3. Render reads `render.yaml` automatically:
+   - **Build Command:** `pip install -r requirements.txt && python generate_dataset.py`
+   - **Start Command:** `uvicorn app:app --host 0.0.0.0 --port $PORT`
+4. The service will be live with full SSL in 2 minutes!
+
+---
+
+## 🧪 Verification & Test Suite
+
+Run the full system test suite:
+```bash
+# Verify MCP protocol stdio
+python test_mcp.py
+
+# Verify MCP server self-test
+python mcp_server.py --test
+```
 
 ```
 ============================================================
@@ -187,16 +279,18 @@ ACCLIME EUROTRACK SYSTEM INTEGRITY VERIFICATION
 ✓ Met Last Year (2025): 35 (100% verified)
 ✓ Not Met Yet: 45 (100% verified)
 ✓ Met Last Year — Follow-up Due: 18 (100% verified)
-✓ Active Pipeline: 11
-✓ Paused: 6
-✓ Unmet High Priority: 28
-✓ Unmet Cold: 17
-✓ Countries: 10 (Germany, UK, France, Netherlands, Switzerland, Sweden, Italy, Spain, Belgium, Denmark)
-✓ Sectors: 6 (Specialty Chemicals, Industrial Manufacturing, MedTech, Cleantech, SaaS, Automotive)
-✓ Web API Endpoints: 15 active routes verified with TestClient
+✓ Total Portfolio Coverage: €14.3 Billion
+✓ Countries: 10 European Nations
+✓ Sectors: 6 Priority Verticals
+✓ Web API Endpoints: 16 active routes verified (including /tour and /api/tts)
+✓ Neural Voice Audio: 8 Studio MP3 Scenes Rendered (Jenny Neural HD)
 ✓ MCP Protocol stdio test: Passed (Initialize, tools/list, tools/call)
 ============================================================
 ```
 
 ---
-*Built with ❤️ for Acclime India Strategy & International Business Advisory.*
+
+<div align="center">
+  <b>Built with ❤️ for Acclime India’s Strategy & International Business Practice</b><br>
+  <sub>Designed & Developed by Anushka Dhiman</sub>
+</div>
