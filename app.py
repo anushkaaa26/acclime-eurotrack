@@ -24,6 +24,16 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Auto-load .env file if present
+env_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(env_file):
+    with open(env_file, "r") as ef:
+        for eline in ef:
+            eline = eline.strip()
+            if eline and not eline.startswith("#") and "=" in eline:
+                ek, ev = eline.split("=", 1)
+                os.environ.setdefault(ek.strip(), ev.strip())
 DB_PATH = os.path.join(BASE_DIR, "euro_companies.db")
 JSON_PATH = os.path.join(BASE_DIR, "euro_companies.json")
 STATIC_DIR = os.path.join(BASE_DIR, "static")
