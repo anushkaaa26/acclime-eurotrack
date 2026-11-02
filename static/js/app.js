@@ -701,15 +701,57 @@ const tourSteps = [
 ];
 
 let currentTourIndex = 0;
+let isTourVoiceOn = true;
+
+function toggleModalVoice() {
+  isTourVoiceOn = !isTourVoiceOn;
+  const btn = document.getElementById("modalVoiceBtn");
+  if (isTourVoiceOn) {
+    btn.textContent = "🔊 AI Voice: ON";
+    btn.style.color = "#60a5fa";
+    speakTourStep();
+  } else {
+    btn.textContent = "🔇 AI Voice: MUTED";
+    btn.style.color = "#94a3b8";
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+  }
+}
+
+function speakTourStep() {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  if (!isTourVoiceOn) return;
+
+  const s = tourSteps[currentTourIndex];
+  const cleanText = (s.title + ". " + s.explanation).replace(/<[^>]*>/g, "").replace(/&[^;]+;/g, " ");
+  const utter = new SpeechSynthesisUtterance(cleanText);
+  utter.rate = 1.0;
+  utter.pitch = 1.0;
+
+  const voices = window.speechSynthesis.getVoices();
+  const voice = voices.find(v => v.lang.startsWith("en") && (
+    v.name.includes("Natural") || 
+    v.name.includes("Google") || 
+    v.name.includes("Samantha") || 
+    v.name.includes("Daniel") || 
+    v.name.includes("Karen") || 
+    v.name.includes("Alex")
+  )) || voices.find(v => v.lang.startsWith("en"));
+  if (voice) utter.voice = voice;
+
+  window.speechSynthesis.speak(utter);
+}
 
 function openTourModal() {
   currentTourIndex = 0;
   renderTourStep();
   document.getElementById("tourModal").classList.add("open");
+  speakTourStep();
 }
 
 function closeTourModal() {
   document.getElementById("tourModal").classList.remove("open");
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
 }
 
 function renderTourStep() {
@@ -728,6 +770,8 @@ function renderTourStep() {
   dotsContainer.innerHTML = tourSteps.map((_, i) => `
     <span style="display:inline-block; width:${i === currentTourIndex ? '18px' : '6px'}; height:6px; border-radius:3px; background:${i === currentTourIndex ? '#2563eb' : '#cbd5e1'}; transition:all 0.2s;"></span>
   `).join("");
+
+  speakTourStep();
 }
 
 function nextTourStep() {

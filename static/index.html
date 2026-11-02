@@ -404,7 +404,12 @@
           <div class="modal-sub" style="color:#94a3b8;" id="tourSubtitle">Acclime EuroTrack AI Interactive Guided Tour</div>
         </div>
       </div>
-      <button class="btn btn-ghost" onclick="closeTourModal()" style="color:#94a3b8;">✕</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button id="modalVoiceBtn" onclick="toggleModalVoice()" class="btn btn-ghost" style="color:#60a5fa; font-size:11px; background:#1e293b; padding:4px 9px; border:1px solid #334155;">
+          🔊 AI Voice: ON
+        </button>
+        <button class="btn btn-ghost" onclick="closeTourModal()" style="color:#94a3b8;">✕</button>
+      </div>
     </div>
     <div class="modal-body" style="padding:20px;">
       <div id="tourGraphic" style="background:#1e293b; border-radius:10px; padding:16px; margin-bottom:14px; color:#f1f5f9; min-height:120px;">
