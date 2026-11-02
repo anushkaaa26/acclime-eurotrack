@@ -590,6 +590,7 @@ const tourSteps = [
     step: "STEP 1/6",
     title: "Executive Portfolio & KPI Cards",
     subtitle: "At-a-Glance European Coverage",
+    audioSrc: "/static/audio/scene1.mp3",
     graphic: `
       <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; text-align:center;">
         <div style="background:#0f172a; padding:8px; border-radius:6px; border:1px solid #334155;">
@@ -616,6 +617,7 @@ const tourSteps = [
     step: "STEP 2/6",
     title: "'Just Ask' Natural Language Command Bar",
     subtitle: "Ask Any Question in Plain English",
+    audioSrc: "/static/audio/scene2.mp3",
     graphic: `
       <div style="background:#0f172a; border:1px solid #3b82f6; border-radius:8px; padding:10px;">
         <div style="font-size:10px; color:#60a5fa; font-weight:700; margin-bottom:4px;">QUERY DATABASE IN NATURAL LANGUAGE</div>
@@ -631,6 +633,7 @@ const tourSteps = [
     step: "STEP 3/6",
     title: "Geographic & Industry Analytics",
     subtitle: "Interactive Country & Sector Breakdown",
+    audioSrc: "/static/audio/scene3.mp3",
     graphic: `
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:11px;">
         <div style="background:#0f172a; padding:10px; border-radius:6px; border:1px solid #334155;">
@@ -651,6 +654,7 @@ const tourSteps = [
     step: "STEP 4/6",
     title: "Corporate Directory & Table Controls",
     subtitle: "Search, Multi-Filter, and View Switching",
+    audioSrc: "/static/audio/scene4.mp3",
     graphic: `
       <div style="background:#0f172a; border:1px solid #334155; border-radius:6px; padding:10px; font-size:11px;">
         <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:6px; margin-bottom:6px;">
@@ -669,6 +673,7 @@ const tourSteps = [
     step: "STEP 5/6",
     title: "Account Dossier Drawer & Meeting Memory",
     subtitle: "Deep Account Memory & Discussion Notes",
+    audioSrc: "/static/audio/scene5.mp3",
     graphic: `
       <div style="background:#0f172a; border-left:4px solid #2563eb; border-radius:6px; padding:10px; font-size:11px;">
         <div style="font-weight:800; color:#fff; font-size:12px;">Bavaria Katalys Chem AG · €420M</div>
@@ -684,6 +689,7 @@ const tourSteps = [
     step: "STEP 6/6",
     title: "Temporary Questions & Email Drafting",
     subtitle: "Contextual Outreach Ready in Seconds",
+    audioSrc: "/static/audio/scene6.mp3",
     graphic: `
       <div style="background:#0f172a; border:1px solid #334155; border-radius:6px; padding:10px; font-size:11px;">
         <div style="color:#60a5fa; font-weight:700;">Angle: Post-Meeting Re-engagement</div>
@@ -702,44 +708,42 @@ const tourSteps = [
 
 let currentTourIndex = 0;
 let isTourVoiceOn = true;
+let currentTourAudio = null;
 
 function toggleModalVoice() {
   isTourVoiceOn = !isTourVoiceOn;
   const btn = document.getElementById("modalVoiceBtn");
   if (isTourVoiceOn) {
-    btn.textContent = "🔊 AI Voice: ON";
+    btn.textContent = "🔊 Voice: ON";
     btn.style.color = "#60a5fa";
     speakTourStep();
   } else {
-    btn.textContent = "🔇 AI Voice: MUTED";
+    btn.textContent = "🔇 Voice: MUTED";
     btn.style.color = "#94a3b8";
+    if (currentTourAudio) currentTourAudio.pause();
     if (window.speechSynthesis) window.speechSynthesis.cancel();
   }
 }
 
 function speakTourStep() {
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
+  if (currentTourAudio) {
+    currentTourAudio.pause();
+    currentTourAudio.currentTime = 0;
+  }
   if (!isTourVoiceOn) return;
 
   const s = tourSteps[currentTourIndex];
-  const cleanText = (s.title + ". " + s.explanation).replace(/<[^>]*>/g, "").replace(/&[^;]+;/g, " ");
-  const utter = new SpeechSynthesisUtterance(cleanText);
-  utter.rate = 1.0;
-  utter.pitch = 1.0;
-
-  const voices = window.speechSynthesis.getVoices();
-  const voice = voices.find(v => v.lang.startsWith("en") && (
-    v.name.includes("Natural") || 
-    v.name.includes("Google") || 
-    v.name.includes("Samantha") || 
-    v.name.includes("Daniel") || 
-    v.name.includes("Karen") || 
-    v.name.includes("Alex")
-  )) || voices.find(v => v.lang.startsWith("en"));
-  if (voice) utter.voice = voice;
-
-  window.speechSynthesis.speak(utter);
+  if (s.audioSrc) {
+    currentTourAudio = new Audio(s.audioSrc);
+    currentTourAudio.play().catch(e => {
+      // Fallback to speech synthesis if audio blocked
+      if (window.speechSynthesis) {
+        const cleanText = (s.title + ". " + s.explanation).replace(/<[^>]*>/g, "").replace(/&[^;]+;/g, " ");
+        const utter = new SpeechSynthesisUtterance(cleanText);
+        window.speechSynthesis.speak(utter);
+      }
+    });
+  }
 }
 
 function openTourModal() {
@@ -751,6 +755,7 @@ function openTourModal() {
 
 function closeTourModal() {
   document.getElementById("tourModal").classList.remove("open");
+  if (currentTourAudio) currentTourAudio.pause();
   if (window.speechSynthesis) window.speechSynthesis.cancel();
 }
 
